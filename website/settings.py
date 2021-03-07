@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+<<<<<<< HEAD
+=======
+
+>>>>>>> 17c217a0713a70074804b343f96f27894b69fc30
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -55,7 +59,11 @@ ROOT_URLCONF = 'website.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+<<<<<<< HEAD
         'DIRS': [os.path.join(BASE_DIR,'templates')],
+=======
+        'DIRS': [ os.path.join(BASE_DIR, 'templates') ],
+>>>>>>> 17c217a0713a70074804b343f96f27894b69fc30
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
