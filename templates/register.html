@@ -1,5 +1,6 @@
 <!doctype html>
 
+{% load static %}
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -7,17 +8,67 @@
   <title>The HTML5 Herald</title>
   <meta name="description" content="The HTML5 Herald">
   <meta name="author" content="SitePoint">
+  <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="css/styles.css?v=1.0">
-
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+  <link rel="stylesheet" href="{% static 'css/register.css' %}">
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 
 <body>
-    <h1>Login</h1>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form }}
-        <input type="submit"/>
-    </form>
+  <div class="container">
+    <div class="d-flex justify-content-center h-100">
+      <div class="card">
+        <div class="card-header">
+          <h3 class='justify-content-center h-100 d-flex'>Sign Up</h3>
+        </div>
+        <div class="card-body">
+          <form method="POST">
+            {% csrf_token %}
+            <div class="input-group form-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fas fa-user"></i></span>
+              </div>
+              <input type="text" class="form-control" placeholder="Username">
+            </div>
+            <div class="input-group form-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+              </div>
+              <input type="email" class="form-control" placeholder="Email">
+            </div>
+            <div class="input-group form-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fas fa-key"></i></span>
+              </div>
+              <input name="password" required="required" type="password" id="password" placeholder="password" class="form-control">
+              <!-- <input type="password" class="form-control" placeholder="Password"> -->
+            </div>
+            <div class="input-group form-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fas fa-key"></i></span>
+              </div>
+              <input name="password_confirm" class="form-control" required="required" type="password" id="password_confirm" placeholder="Confirm Password" oninput="check(this)" />
+              <script language='javascript' type='text/javascript'>
+                  function check(input) {
+                      if (input.value != document.getElementById('password').value) {
+                          input.setCustomValidity('Passwords Must be Matching.');
+                      } else {
+                          // input is valid -- reset the error message
+                          input.setCustomValidity('');
+                      }
+                  }
+              </script>
+            </div>
+            <div class="form-group">
+              <input type="submit" value="Signup" class="justify-content-center h-100 d-flex btn login_btn">
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
