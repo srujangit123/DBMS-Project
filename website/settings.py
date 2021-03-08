@@ -127,4 +127,4 @@ STATICFILES_DIRS = [
 ]
 
 
-AUTH_USER_MODEL = 'rent_app.User'
+AUTH_USER_MODEL = 'rent_app.CustomUser'
