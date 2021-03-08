@@ -41,7 +41,7 @@ class CustomUserManager(BaseUserManager):
 class CustomUser(AbstractUser):
     username = None
     email = models.EmailField(_('email address'), unique=True)
-    phoneno = models.IntegerField(null=True, validators=[MaxLengthValidator(10),MinLengthValidator(10)])
+    phoneno = models.IntegerField(null=True)
     upi_id = models.CharField(max_length=255, null=True)
     address = models.CharField(max_length=255, null=True)
     user_name = models.CharField(max_length=20, null=True)
