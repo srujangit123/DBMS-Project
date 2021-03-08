@@ -1,9 +1,12 @@
 from django.shortcuts import render, redirect
 # from django.contrib.auth import authenticate, login
-# from .models import user_type, User
-
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User,auth
+from django.shortcuts import get_object_or_404
+from .models import CustomUser,CustomUserManager
 
 def HomePage(request):
+    print(request.user)
     return render(request, 'home.html')
 
 
@@ -27,25 +30,32 @@ def HomePage(request):
 
 def signup(request):
     if (request.method == 'POST'):
-        # print(request.POST)
+        print(request.POST)
         email = request.POST.get('email')
+        print(email,"email")
         password = request.POST.get('password')
         owner1 = request.POST.get('owner')
         user1 = request.POST.get('user')
+        username=request.POST.get('username')
+        try:
+            CustomUser.objects.get(email=email)
+            print('user already exist')
+            return redirect('/register')
+        except CustomUser.DoesNotExist:
+            user = CustomUser.objects.create_user(
+                email=email,
+                password=password
+            )
+            print(user)
+            auth.login(request,user)
+        return redirect('/')
+        # usert = None
+        # if owner1:
+        #     usert = user_type(user=user, is_owner=True)
+        # elif user1:
+        #     usert = user_type(user=user, is_user=True)
         
-        user = User.objects.create_user(
-            email=email,
-        )
-        user.set_password(password)
-        user.save()
-        
-        usert = None
-        if owner1:
-            usert = user_type(user=user, is_owner=True)
-        elif user1:
-            usert = user_type(user=user, is_user=True)
-        
-        usert.save()
+        # usert.save()
         #Successfully registered. Redirect to homepage
         # return redirect('home')
         print('sign1111')
@@ -57,19 +67,24 @@ def login(request):
         email = request.POST.get('email') #Get email value from form
         password = request.POST.get('password') #Get password value from form
         user = authenticate(request, email=email, password=password)
-        
+        # print(user)
         if user is not None:
-            login(request, user)
-            type_obj = user_type.objects.get(user=user)
-            if user.is_authenticated and type_obj.is_student:
-                # return redirect('shome') #Go to student home
-                print('world1')
-            elif user.is_authenticated and type_obj.is_teach:
-                print('hello1')
+            auth.login(request, user)
+            # type_obj = user_type.objects.get(user=user)
+            # if user.is_authenticated and type_obj.is_student:
+            #     # return redirect('shome') #Go to student home
+            #     print('world1')
+            # elif user.is_authenticated and type_obj.is_teach:
+            #     print('hello1')
                 # return redirect('') #Go to teacher home
+            return redirect('/')
         else:
             # Invalid email or password. Handle as you wish
             print('here1')
-            return redirect('home')
+            return redirect('/')
 
     return render(request, 'login.html')
+
+def logout(request):
+    auth.logout(request)
+    return redirect('/')
