@@ -46,8 +46,13 @@
           <li class="nav-item">
             <a class="nav-link" href="#">Contact</a>
           </li>
+          {% if user.is_authenticated %}
+          <li class="nav-item nav-link">{{user.email}}</li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout<i class="fas fa-user-plus"></i></a></li>
+          {% else %}
           <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Sign Up <i class="fas fa-user-plus"></i></a></li>
-					<li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login <i class="fas fa-sign-in-alt"></i></a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login <i class="fas fa-sign-in-alt"></i></a></li>
+          {%endif%}
         </ul>
       </div>
     </div>

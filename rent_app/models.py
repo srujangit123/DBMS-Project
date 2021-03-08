@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.base_user import BaseUserManager
@@ -35,6 +36,13 @@ class CustomUserManager(BaseUserManager):
             raise ValueError(_('Superuser must have is_superuser=True.'))
         return self.create_user(email, password, **extra_fields)
 
+# class UserDetails(models.Model):
+#     user=models.ForeignKey(User,on_delete=models.CASCADE)
+#     phoneno = models.IntegerField(null=True, validators=[MaxLengthValidator(10),MinLengthValidator(10)])
+#     upi_id = models.CharField(max_length=255, null=True)
+#     address = models.CharField(max_length=255, null=True)
+#     def __str__(self):
+#         return self.email
 
 class CustomUser(AbstractUser):
     username = None
