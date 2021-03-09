@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.base_user import BaseUserManager
 from django.core.validators import MaxLengthValidator, MinLengthValidator
 
+
 class CustomUserManager(BaseUserManager):
     """
     Custom user model manager where email is the unique identifiers
@@ -36,13 +37,6 @@ class CustomUserManager(BaseUserManager):
             raise ValueError(_('Superuser must have is_superuser=True.'))
         return self.create_user(email, password, **extra_fields)
 
-# class UserDetails(models.Model):
-#     user=models.ForeignKey(User,on_delete=models.CASCADE)
-#     phoneno = models.IntegerField(null=True, validators=[MaxLengthValidator(10),MinLengthValidator(10)])
-#     upi_id = models.CharField(max_length=255, null=True)
-#     address = models.CharField(max_length=255, null=True)
-#     def __str__(self):
-#         return self.email
 
 class CustomUser(AbstractUser):
     username = None
@@ -50,6 +44,8 @@ class CustomUser(AbstractUser):
     phoneno = models.IntegerField(null=True)
     upi_id = models.CharField(max_length=255, null=True)
     address = models.CharField(max_length=255, null=True)
+    user_name = models.CharField(max_length=20, null=True)
+    profile_image = models.ImageField(upload_to='images/', null=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
