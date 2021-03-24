@@ -5,6 +5,8 @@ from django.contrib.auth.models import User,auth
 from django.shortcuts import get_object_or_404
 from .models import CustomUser,CustomUserManager, House, HouseImages
 from django.conf import settings
+from .forms import *
+from django.contrib import messages
 
 
 def HomePage(request):
@@ -40,7 +42,7 @@ def HomePage(request):
 
 
 def signup(request):
-    if (request.method == 'POST'):
+    if request.method == 'POST':
         print(request.POST)
         email = request.POST.get('email')
         print(email,"email")
@@ -64,7 +66,7 @@ def signup(request):
 
 
 def login(request):
-    if (request.method == 'POST'):
+    if request.method == 'POST':
         email = request.POST.get('email') #Get email value from form
         password = request.POST.get('password') #Get password value from form
         user = authenticate(request, email=email, password=password)
@@ -84,5 +86,30 @@ def logout(request):
     auth.logout(request)
     return redirect('/')
 
+
 def dashboard(request):
-    return render(request,'dashboard.html')
+    if request.user.is_authenticated:
+        print(request.user.user_name)
+        print(request.user.profile_image)
+        return render(request, 'dashboard.html')
+    else:
+        return redirect('/login')
+
+
+def update_profile(request):
+    if not request.user.is_authenticated:
+        return redirect('/login')
+
+    if request.method == 'POST':
+        print("post")
+        form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your profile has been updated!')
+            return redirect('/dashboard')
+    else:
+        form = ProfileUpdateForm(instance=request.user)
+    context = {
+        'p_form': form
+    }
+    return render(request, 'update_profile.html', context)

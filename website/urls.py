@@ -25,7 +25,8 @@ urlpatterns = [
     path('login/', login, name='login'),
     path('register/', signup, name='register'),
     path('logout', logout, name='logout'),
-    path('dashboard',dashboard,name='dashboard')
+    path('dashboard',dashboard,name='dashboard'),
+    path('users/edit', update_profile, name='update_profile'),
 ]
 
 if settings.DEBUG: 

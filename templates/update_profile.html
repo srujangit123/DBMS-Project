@@ -1,0 +1,26 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>The HTML5 Herald</title>
+  <meta name="description" content="The HTML5 Herald">
+  <meta name="author" content="SitePoint">
+
+  <link rel="stylesheet" href="css/styles.css?v=1.0">
+
+</head>
+
+<body>
+    <form method='POST' enctype="multipart/form-data">
+        {% csrf_token %}
+        {{p_form}}
+        {% comment %} <input type="text" placeholder="Email" name="email">
+        <input type="text" placeholder="Phone Number" name="phoneno">
+        <input type="text" placeholder='upi_id' name="upi_id">
+        <input type="file" name="profile_image" > {% endcomment %}
+        <button type='submit'>Update</button>
+    </form>
+</body>
+</html>
