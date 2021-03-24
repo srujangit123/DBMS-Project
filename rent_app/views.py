@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User,auth
 from django.shortcuts import get_object_or_404
-from .models import CustomUser,CustomUserManager, House, HouseImages
+from .models import CustomUser,CustomUserManager, House, HouseImages, Review
 from django.conf import settings
 from .forms import *
 from django.contrib import messages
@@ -91,7 +91,15 @@ def dashboard(request):
     if request.user.is_authenticated:
         print(request.user.user_name)
         print(request.user.profile_image)
-        return render(request, 'dashboard.html')
+        housesOwned = House.objects.filter(owner_id=request.user.pk).count()
+        # print(housesOwned)
+        reviewsGiven = Review.objects.filter(user_id=request.user.pk).count()
+        # print(reviewsGiven)
+        context = {
+            'housesOwned': housesOwned,
+            'reviewsGiven': reviewsGiven
+        }
+        return render(request, 'dashboard.html', context)
     else:
         return redirect('/login')
 
