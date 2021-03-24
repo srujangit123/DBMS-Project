@@ -3,29 +3,40 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User,auth
 from django.shortcuts import get_object_or_404
-from .models import CustomUser,CustomUserManager
+from .models import CustomUser,CustomUserManager, House, HouseImages
+from django.conf import settings
+
 
 def HomePage(request):
-    print(request.user)
-    return render(request, 'home.html')
+    # print(request.user)
 
+    # select image from houseImages; 
+    # houseImagesURL = HouseImages.objects.values_list('image')
+    
+    # select * from houseImages
+    houseImages = HouseImages.objects.all()
 
-# def ownerhome(request):
-#     if request.user.is_authenticated and user_type.objects.get(user=request.user).is_owner:
-#         return render(request, 'owner_home.html')
-#     elif request.user.is_authenticated and user_type.objects.get(user=request.user).is_teach:
-#         return redirect('userhome')
-#     else:
-#         return redirect('login')
+    # select * from houses;
+    houses = House.objects.all()
 
+    # Contains [house_id, thumbnail_image] array of arrays
+    houseThumbnails = []
 
-# def userhomehome(request):
-#     if request.user.is_authenticated and user_type.objects.get(user=request.user).is_teach:
-#         return render(request,'user_home.html')
-#     elif request.user.is_authenticated and user_type.objects.get(user=request.user).is_student:
-#         return redirect('ownerhome')
-#     else:
-#         return redirect('home')
+    # Just using house.house_id gives house object and not the real ID, so using pk attribute we get the ID
+    for house in houses:
+        for image in houseImages:
+            if image.house_id.pk == house.pk:
+                houseThumbnails.append([house.pk, image.image])
+                break
+
+    for ob in houseThumbnails:
+        print(ob[0], ob[1])
+
+    context = {
+        'thumbnails' : houseThumbnails,
+        'houses': houses
+    }
+    return render(request, 'home.html', context)
 
 
 def signup(request):

@@ -82,7 +82,7 @@ class House(models.Model):
     def __str__(self):
         return self.address
 
-
+# select image from HouseImages inner join House where HouseImages.house_id=House.house_id
 class HouseImages(models.Model):
     house_id        = models.ForeignKey(House, on_delete=models.CASCADE)
     image           = models.ImageField(upload_to='house_images/', null=False)
