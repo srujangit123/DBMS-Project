@@ -1,0 +1,39 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>The HTML5 Herald</title>
+  <meta name="description" content="The HTML5 Herald">
+  <meta name="author" content="SitePoint">
+
+  <link rel="stylesheet" href="css/styles.css?v=1.0">
+
+</head>
+    <h1> Rent: {{ house.rent}}</h1>
+    <h1> City : {{ house.city}}</h1>
+    <h1> State: {{ house.state}}</h1>
+    <h1> des: {{ house.description}}</h1>
+    <h1> Address: {{ house.address}}</h1>
+    <h1> Owner : {{ owner.email}}</h1>
+    <h1> owner upi_id: {{ owner.upi_id}}</h1>
+    <h1> owner phone : {{ owner.phoneno}}</h1>
+    <h1> owner address: {{ owner.address}}</h1>
+    {% for image in images %}
+        <img src = /media/{{image.image}}/>
+    {% endfor %}
+    <br>
+    <br>
+    <br>
+    <h1> Reviews</h1>
+    <div> 
+        {% for review in reviews %}
+            <h4> profile image of user</h4>
+            <img src = "/media/{{review.user_id.profile_image}}">
+            {{ review.user_id.user_name }} : {{ review.rating }} ->  {{ review.description }}
+            <br>
+        {% endfor %}
+    </div>
+</body>
+</html>

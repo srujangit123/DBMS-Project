@@ -27,6 +27,7 @@ urlpatterns = [
     path('logout', logout, name='logout'),
     path('dashboard',dashboard,name='dashboard'),
     path('users/edit', update_profile, name='update_profile'),
+    path('houses/<int:house_id>', viewHouse, name='view_house'),
 ]
 
 if settings.DEBUG: 

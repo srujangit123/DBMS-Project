@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 # from django.contrib.auth import authenticate, login
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User,auth
@@ -121,3 +121,25 @@ def update_profile(request):
         'p_form': form
     }
     return render(request, 'update_profile.html', context)
+
+
+def viewHouse(request, house_id):
+    print(house_id)
+
+    # There exists only a single house with this house id ie the first element of the queryset always.
+    house = House.objects.filter(house_id=house_id)[0]
+    houseImages = HouseImages.objects.filter(house_id=house_id)
+    reviews = Review.objects.filter(house_id=house_id)
+    # print(houseImages)
+    # print(house)
+    print(house.owner_id)
+    # for image in houseImages:
+    #     print(image.image)
+    context = {
+        'house': house,
+        'images': houseImages,
+        'owner': house.owner_id,
+        'reviews': reviews,
+    }
+    # return HttpResponse('hello')
+    return render(request, 'house_details.html', context)
