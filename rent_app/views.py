@@ -41,6 +41,19 @@ def HomePage(request):
     return render(request, 'home.html', context)
 
 
+def about(request):
+    return render(request, 'about.html')
+
+
+def services(request):
+    return render(request, 'services.html')
+
+
+def contact(request):
+    return render(request, 'contact.html')
+
+
+
 def signup(request):
     if request.method == 'POST':
         print(request.POST)
@@ -89,15 +102,26 @@ def logout(request):
 
 def dashboard(request):
     if request.user.is_authenticated:
-        print(request.user.user_name)
-        print(request.user.profile_image)
-        housesOwned = House.objects.filter(owner_id=request.user.pk).count()
-        # print(housesOwned)
-        reviewsGiven = Review.objects.filter(user_id=request.user.pk).count()
-        # print(reviewsGiven)
+        # Here request.user.id gives the id of the user and not the object itself.
+        ownedHouses = House.objects.filter(owner_id=request.user.id)
+        print(ownedHouses)
+
+        ownedHouseThumbnails = []
+        houseImages = HouseImages.objects.all()
+        # Just using house.house_id gives house object and not the real ID, so using pk attribute we get the ID
+        for house in ownedHouses:
+            for image in houseImages:
+                if image.house_id.pk == house.pk:
+                    ownedHouseThumbnails.append([house.pk, image.image])
+                    break
+
+
+        reviewsGiven = Review.objects.filter(user_id=request.user.id).count()
         context = {
-            'housesOwned': housesOwned,
-            'reviewsGiven': reviewsGiven
+            'housesOwned': ownedHouses.count(),
+            'reviewsGiven': reviewsGiven,
+            'ownedHouseThumbnails': ownedHouseThumbnails,
+            'ownedHouses': ownedHouses
         }
         return render(request, 'dashboard.html', context)
     else:
@@ -143,3 +167,8 @@ def viewHouse(request, house_id):
     }
     # return HttpResponse('hello')
     return render(request, 'house_details.html', context)
+
+
+def addHouse(request):
+    
+    return HttpResponse("hey")
