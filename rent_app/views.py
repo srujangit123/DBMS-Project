@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect, HttpResponse
-# from django.contrib.auth import authenticate, login
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User,auth
 from django.shortcuts import get_object_or_404
@@ -10,16 +9,12 @@ from django.contrib import messages
 
 
 def HomePage(request):
-    # print(request.user)
-
-    # select image from houseImages; 
-    # houseImagesURL = HouseImages.objects.values_list('image')
     
-    # select * from houseImages
-    houseImages = HouseImages.objects.all()
+    # select all house images
+    houseImages = HouseImages.objects.raw("SELECT * FROM rent_app_houseimages")
 
-    # select * from houses;
-    houses = House.objects.all()
+    # select all houses in the house table;
+    houses = House.objects.raw("SELECT * FROM rent_app_house")
 
     # Contains [house_id, thumbnail_image] array of arrays
     houseThumbnails = []
@@ -102,12 +97,15 @@ def logout(request):
 
 def dashboard(request):
     if request.user.is_authenticated:
-        # Here request.user.id gives the id of the user and not the object itself.
-        ownedHouses = House.objects.filter(owner_id=request.user.id)
-        print(ownedHouses)
 
+        # Here request.user.id gives the id of the user and not the object itself.
+        ownedHouses = House.objects.raw("SELECT * FROM rent_app_house where owner_id_id = " + str(request.user.id))
+        
         ownedHouseThumbnails = []
-        houseImages = HouseImages.objects.all()
+
+        # Fetch all images from house images
+        houseImages = HouseImages.objects.raw("SELECT * FROM rent_app_houseimages")
+       
         # Just using house.house_id gives house object and not the real ID, so using pk attribute we get the ID
         for house in ownedHouses:
             for image in houseImages:
@@ -115,11 +113,12 @@ def dashboard(request):
                     ownedHouseThumbnails.append([house.pk, image.image])
                     break
 
-
-        reviewsGiven = Review.objects.filter(user_id=request.user.id).count()
+        # Fetch all reviews of the user
+        reviewsGiven = Review.objects.raw("SELECT * FROM rent_app_review where user_id_id = " + str(request.user.id))
+        # Data obtained from the queries must be passed to the dashboard.html template
         context = {
-            'housesOwned': ownedHouses.count(),
-            'reviewsGiven': reviewsGiven,
+            'housesOwned': len(ownedHouses),
+            'reviewsGiven': len(reviewsGiven),
             'ownedHouseThumbnails': ownedHouseThumbnails,
             'ownedHouses': ownedHouses
         }
@@ -148,24 +147,23 @@ def update_profile(request):
 
 
 def viewHouse(request, house_id):
-    print(house_id)
 
     # There exists only a single house with this house id ie the first element of the queryset always.
-    house = House.objects.filter(house_id=house_id)[0]
-    houseImages = HouseImages.objects.filter(house_id=house_id)
-    reviews = Review.objects.filter(house_id=house_id)
-    # print(houseImages)
-    # print(house)
-    print(house.owner_id)
-    # for image in houseImages:
-    #     print(image.image)
+    house = House.objects.raw("SELECT * FROM rent_app_house where house_id = " + str(house_id))[0]
+
+    # Fetch all images for the house with given house id
+    houseImages = HouseImages.objects.raw("SELECT * FROM rent_app_houseimages where house_id_id = " + str(house_id))
+
+    # Fetch all reviews for the house with given house id
+    reviews = Review.objects.raw("SELECT * FROM rent_app_review where house_id_id = " + str(house_id))
+
+    # Data obtained from the queries must be passed to the house_details.html template
     context = {
         'house': house,
         'images': houseImages,
-        'owner': house.owner_id,
+        'owner': house.owner_id_id,
         'reviews': reviews,
     }
-    # return HttpResponse('hello')
     return render(request, 'house_details.html', context)
 
 
