@@ -24,7 +24,10 @@ urlpatterns = [
     path('', HomePage),
     path('login/', login, name='login'),
     path('register/', signup, name='register'),
-    path('logout', logout, name='logout')
+    path('logout', logout, name='logout'),
+    path('dashboard',dashboard,name='dashboard'),
+    path('users/edit', update_profile, name='update_profile'),
+    path('houses/<int:house_id>', viewHouse, name='view_house'),
 ]
 
 if settings.DEBUG: 

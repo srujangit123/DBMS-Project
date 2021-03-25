@@ -1,35 +1,48 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 # from django.contrib.auth import authenticate, login
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User,auth
 from django.shortcuts import get_object_or_404
-from .models import CustomUser,CustomUserManager
+from .models import CustomUser,CustomUserManager, House, HouseImages, Review
+from django.conf import settings
+from .forms import *
+from django.contrib import messages
+
 
 def HomePage(request):
-    print(request.user)
-    return render(request, 'home.html')
+    # print(request.user)
 
+    # select image from houseImages; 
+    # houseImagesURL = HouseImages.objects.values_list('image')
+    
+    # select * from houseImages
+    houseImages = HouseImages.objects.all()
 
-# def ownerhome(request):
-#     if request.user.is_authenticated and user_type.objects.get(user=request.user).is_owner:
-#         return render(request, 'owner_home.html')
-#     elif request.user.is_authenticated and user_type.objects.get(user=request.user).is_teach:
-#         return redirect('userhome')
-#     else:
-#         return redirect('login')
+    # select * from houses;
+    houses = House.objects.all()
 
+    # Contains [house_id, thumbnail_image] array of arrays
+    houseThumbnails = []
 
-# def userhomehome(request):
-#     if request.user.is_authenticated and user_type.objects.get(user=request.user).is_teach:
-#         return render(request,'user_home.html')
-#     elif request.user.is_authenticated and user_type.objects.get(user=request.user).is_student:
-#         return redirect('ownerhome')
-#     else:
-#         return redirect('home')
+    # Just using house.house_id gives house object and not the real ID, so using pk attribute we get the ID
+    for house in houses:
+        for image in houseImages:
+            if image.house_id.pk == house.pk:
+                houseThumbnails.append([house.pk, image.image])
+                break
+
+    for ob in houseThumbnails:
+        print(ob[0], ob[1])
+
+    context = {
+        'thumbnails' : houseThumbnails,
+        'houses': houses
+    }
+    return render(request, 'home.html', context)
 
 
 def signup(request):
-    if (request.method == 'POST'):
+    if request.method == 'POST':
         print(request.POST)
         email = request.POST.get('email')
         print(email,"email")
@@ -53,7 +66,7 @@ def signup(request):
 
 
 def login(request):
-    if (request.method == 'POST'):
+    if request.method == 'POST':
         email = request.POST.get('email') #Get email value from form
         password = request.POST.get('password') #Get password value from form
         user = authenticate(request, email=email, password=password)
@@ -72,3 +85,61 @@ def login(request):
 def logout(request):
     auth.logout(request)
     return redirect('/')
+
+
+def dashboard(request):
+    if request.user.is_authenticated:
+        print(request.user.user_name)
+        print(request.user.profile_image)
+        housesOwned = House.objects.filter(owner_id=request.user.pk).count()
+        # print(housesOwned)
+        reviewsGiven = Review.objects.filter(user_id=request.user.pk).count()
+        # print(reviewsGiven)
+        context = {
+            'housesOwned': housesOwned,
+            'reviewsGiven': reviewsGiven
+        }
+        return render(request, 'dashboard.html', context)
+    else:
+        return redirect('/login')
+
+
+def update_profile(request):
+    if not request.user.is_authenticated:
+        return redirect('/login')
+
+    if request.method == 'POST':
+        print("post")
+        form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your profile has been updated!')
+            return redirect('/dashboard')
+    else:
+        form = ProfileUpdateForm(instance=request.user)
+    context = {
+        'p_form': form
+    }
+    return render(request, 'update_profile.html', context)
+
+
+def viewHouse(request, house_id):
+    print(house_id)
+
+    # There exists only a single house with this house id ie the first element of the queryset always.
+    house = House.objects.filter(house_id=house_id)[0]
+    houseImages = HouseImages.objects.filter(house_id=house_id)
+    reviews = Review.objects.filter(house_id=house_id)
+    # print(houseImages)
+    # print(house)
+    print(house.owner_id)
+    # for image in houseImages:
+    #     print(image.image)
+    context = {
+        'house': house,
+        'images': houseImages,
+        'owner': house.owner_id,
+        'reviews': reviews,
+    }
+    # return HttpResponse('hello')
+    return render(request, 'house_details.html', context)
