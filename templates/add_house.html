@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add House</title>
+
+    <!-- Bootstrap core CSS -->
+    <!-- <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet"> -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <!-- <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet"> -->
+
+    <!-- Custom styles for this template -->
+   <link href="{% static 'css/add_house.css' %}" rel="stylesheet">
+</head>
+<body>
+
+    <nav class="navbar navbar-default navbar-dark">
+		<div class="conainer-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="/">Rental Management</a>		
+			</div>
+			<div class="collapse navbar-collapse">
+				<ul class="nav navbar-nav navbar-right">
+						<li><a>Signed in as X</a></li>
+						<li><a href="/logout">Logout</a></li>
+					
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+    <div class="container">
+        <div class="row">
+            <h1 style="text-align:center";>Add new house</h1>
+            <div style="width:30%; margin: 30px auto;" >
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div><label for="city">City</label></div>
+                <div class="form-group">
+                    <input   class="form-control" type="text" name="city" placeholder="City">
+                </div>
+                <div><label for="State">State</label></div>
+                <div class="form-group">
+                    <input class="form-control" type="text" name="state" placeholder="State">
+                </div>
+                <div><label for="address">Address</label></div>
+                <div class="form-group">
+                    <input class="form-control" type="textarea" name="address" placeholder="Address">
+                </div>
+                <div><label for="description">Description</label></div>
+                <div class="form-group">
+                    <input class="form-control" type="textarea" name="description" placeholder="Description">
+                </div>
+                <div><label for="rent">Rent</label></div>
+                <div class="form-group">
+                    <input class="form-control" type="number" name="rent" placeholder="Rent(per month)">
+                </div> 
+                <!-- <div><label for="image">Image</label></div>
+                <div class="form-group">
+                    <input class="form-control" type="submit" value="Upload Image" name="image" placeholder="Image">
+                </div>  -->
+                <div class="form-group">
+                    <button class="btn btn-lg btn-primary btn-block" type="submit" name="">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

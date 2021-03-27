@@ -161,12 +161,28 @@ def viewHouse(request, house_id):
     context = {
         'house': house,
         'images': houseImages,
-        'owner': house.owner_id_id,
+        'owner': house.owner_id,
         'reviews': reviews,
     }
     return render(request, 'house_details.html', context)
 
 
 def addHouse(request):
-    
-    return HttpResponse("hey")
+
+    if request.method == 'POST':
+
+        # fetch user object
+        user = request.user
+
+        # Insert a new record in the house table
+        new_house = House.objects.create(owner_id=user,
+                                  city=request.POST['city'],
+                                  state=request.POST['state'],
+                                  address=request.POST['address'],
+                                  description=request.POST['description'],
+                                  rent=request.POST['rent']
+                                )
+
+        # redirect to house detail page
+        return redirect('/houses/' + str(new_house.house_id))
+    return render(request,'add_house.html')

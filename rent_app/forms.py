@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django import forms
 
-from .models import CustomUser
+from .models import CustomUser, House, HouseImages
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -52,3 +52,18 @@ class ProfileUpdateForm(forms.ModelForm):
             'upi_id',
             'address'
         )
+
+class AddHouseForm(forms.ModelForm):
+
+    class Meta:
+
+        model = House
+        fields = ('owner_id',
+            'city',
+            'state',
+            'address',
+            'rent',
+            'description',
+            # 'image'
+        )
+        # widgets = {'owner_id':forms.HiddenInput(),}

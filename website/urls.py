@@ -31,7 +31,7 @@ urlpatterns = [
     path('dashboard',dashboard,name='dashboard'),
     path('users/edit', update_profile, name='update_profile'),
     path('houses/<int:house_id>', viewHouse, name='view_house'),
-    path('houses/add', addHouse, name='addhouse')
+    path('houses/add_house', addHouse, name='add_house')
 ]
 
 if settings.DEBUG: 
