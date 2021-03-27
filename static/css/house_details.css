@@ -1,0 +1,158 @@
+.preview_bg {
+  height: 90px;
+  width: 1200px;
+  background-color: #ffffff;
+  left: 0;
+  right: 0;
+  margin: auto;
+  /* display:flex; */
+  /* align-items:center; */
+  border: 1px solid lightblue;
+}
+
+.preview_text_price {
+  position: relative;
+  top: 23px;
+  left: 24px;
+  font-size: 30px;
+}
+.preview_text_seperator {
+  border-left: 2px solid black;
+  height: 60px;
+  left: 115px;
+  bottom: 20px;
+  position: relative;
+}
+
+.preview_text_property_name {
+  position: relative;
+  top: 18px;
+  left: 140px;
+  font-size: 24px;
+}
+.preview_text_property_place {
+  position: relative;
+  bottom: 20px;
+  left: 140px;
+  font-size: 17;
+}
+
+.preview_owner_bg {
+  position: relative;
+  background-color: #eeeeee;
+  width: 100px;
+  height: 60px;
+  top: 13px;
+  right: 20px;
+  border: 1px solid lightblue;
+}
+
+.preview_text_property_owner {
+  position: relative;
+  right: 50px;
+  top: 22px;
+}
+
+.preview_text_property_owner_name {
+  position: relative;
+  right: 45px;
+  top: 45px;
+  font-size: 18px;
+}
+
+.image_contact {
+  position: relative;
+  background: #ff0000;
+  text-align: center;
+  width: 100px;
+  height: 40px;
+  color: #ffffff;
+  font-size: 15px;
+  left: 160px;
+  bottom: 20px;
+  font-size: 18px;
+  text-align: center;
+  line-height: 36px;
+}
+
+.image_rentnow {
+  position: relative;
+  background: #ff0000;
+  text-align: center;
+  width: 100px;
+  height: 40px;
+  color: #ffffff;
+  font-size: 15px;
+  left: 270px;
+  bottom: 20px;
+  font-size: 18px;
+  text-align: center;
+  line-height: 35px;
+}
+
+.image_bg {
+  background-color: #ffffff;
+  width: 1200px;
+  height: 610px;
+  left: 0;
+  right: 0;
+  top: 110px;
+  margin: auto;
+}
+.image_image {
+  position: relative;
+  height: 270px;
+  width: 340px;
+  top: 20px;
+  left: 30px;
+}
+
+.image_vl {
+  position: relative;
+  border-left: 15px solid #eeeeee;
+  height: 700px;
+  left: 390px;
+}
+.image_hl {
+  position: relative;
+  border-top: 3px solid #eeeeee;
+  width: 810px;
+  left: 401px;
+  top: 200px;
+}
+
+.image_text_desc_name {
+  position: relative;
+  left: 420px;
+  top: 20px;
+  font-size: 25px;
+}
+
+.image_text_desc {
+  position: relative;
+  left: 420;
+  top: 70px;
+  font-size: 21px;
+}
+
+.image_text_name {
+  position: relative;
+  left: 430px;
+  top: 265px;
+  font-size: 20px;
+}
+
+.image_text {
+  position: relative;
+  right: 200px;
+  top: 265px;
+  font-size: 18px;
+}
+
+.body {
+  background-color: #eeeeee;
+}
+
+.pos {
+  position: absolute;
+}
