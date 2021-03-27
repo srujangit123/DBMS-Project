@@ -59,7 +59,7 @@
       <section class="profile">
         <header class="header">
           <div class="details">
-            <img src="media/{{user.profile_image}}" alt="{{user.user_name}}" class="profile-pic">
+            <img src="../media/profile_images/{{user.profile_image}}" alt="{{user.user_name}}" class="profile-pic">
             <h1 class="heading">{{user.user_name}}</h1>
             <a href="/users/edit">edit</a>
             <div class="location">
@@ -87,57 +87,32 @@
       </section>
       <h3>My Owned Houses</h3>
       <div class="row">
-
+      {% for ownedHouse in ownedHouses %}
         <div class="col-lg-4 col-md-6 mb-4">
           <div class="card h-100">
-            <a href="#"><img class="card-img-top" src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt=""></a>
+            {% for th in ownedHouseThumbnails %}
+              {% if th.0 == ownedHouse.house_id %}
+                <a href="/houses/{{ownedHouse.house_id}}"><img class="card-img-top" src="/media/{{th.1}}" alt=""></a>
+              {% endif %}
+            {% endfor %}
             <div class="card-body">
               <h4 class="card-title">
-                <a href="#">Item One</a>
+              {% comment %} Both ownedHouse.pk and ownedHouse.house_id works here. !! {% endcomment %}
+                <a href="/houses/{{ownedHouse.house_id}}">{{ownedHouse.house_id}}</a>
               </h4>
-              <h5>$24.99</h5>
-              <p class="card-text">A good villa with a private pool</p>
+              <h5>Rs.{{ownedHouse.rent}}</h5>
+              <p class="card-text">{{ownedHouse.description}}</p>
             </div>
             <div class="card-footer">
-              <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
+              <small class="text-muted">Open the house page to view the reviews and ratings</small>
             </div>
           </div>
         </div>
 
-        <div class="col-lg-4 col-md-6 mb-4">
-          <div class="card h-100">
-            <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
-            <div class="card-body">
-              <h4 class="card-title">
-                <a href="#">Item Two</a>
-              </h4>
-              <h5>$24.99</h5>
-              <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet numquam aspernatur! Lorem ipsum dolor sit amet.</p>
-            </div>
-            <div class="card-footer">
-              <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6 mb-4">
-          <div class="card h-100">
-            <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
-            <div class="card-body">
-              <h4 class="card-title">
-                <a href="#">Item Three</a>
-              </h4>
-              <h5>$24.99</h5>
-              <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet numquam aspernatur!</p>
-            </div>
-            <div class="card-footer">
-              <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
-            </div>
-          </div>
+        {% endfor %}
         </div>
         <br>
         <div><h3>My Rented Houses</h3></div><br>
-        <br>
         <div class="col-lg-4 col-md-6 mb-4">
           <div class="card h-100">
             <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
