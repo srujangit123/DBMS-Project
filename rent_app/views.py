@@ -5,6 +5,7 @@ from django.contrib.auth.models import User, auth
 from django.shortcuts import get_object_or_404
 from .models import CustomUser, CustomUserManager, House, HouseImages, Review, Requests
 from django.conf import settings
+from django.core.mail import send_mail
 from .forms import *
 from django.contrib import messages
 import datetime
@@ -12,7 +13,12 @@ from django.db import connection
 
 
 def HomePage(request):
-    
+    city = ''
+    try:
+        # Todo -> filters
+        city = request.GET['city']
+    except:
+        print('no city param')
     # select all house images
     houseImages = HouseImages.objects.raw("SELECT * FROM rent_app_houseimages")
 
@@ -71,6 +77,11 @@ def signup(request):
             )
             print(user)
             auth.login(request,user)
+            subject = 'Welcome to Rental Management'
+            message = f'Hi {user.user_name}, Thank you for registering on our webiste. If you have any problem accessing it, please contact us.\n\nThank you'
+            email_from = settings.EMAIL_HOST_USER
+            recipient_list = [user.email, ]
+            send_mail( subject, message, email_from, recipient_list )
         return redirect('/')
         print('sign1111')
     return render(request, 'register.html')
@@ -84,6 +95,11 @@ def login(request):
         # print(user)
         if user is not None:
             auth.login(request, user)
+            subject = 'New sign in to our website'
+            message = f'Hi {user.user_name}, Recently you logged in to Rental Webiste management website. If it is not you, please change your password.\nThank you'
+            email_from = settings.EMAIL_HOST_USER
+            recipient_list = [user.email, ]
+            send_mail( subject, message, email_from, recipient_list )
             return redirect('/')
         else:
             # Invalid email or password. Handle as you wish
@@ -232,6 +248,7 @@ def sendRentRequest(request, house_id):
     else:
         Requests.objects.create(house_id_id=house_id, user_id_id=request.user.id)
         messages.success(request, "Request sent successfully")
+        
         return redirect("/houses/" + str(house_id))
 
     return HttpResponse('404')
@@ -248,11 +265,18 @@ def acceptRequest(request, house_id, user_id):
     if reqHouse.owner_id.pk != request.user.id:
         return HttpResponse('You are not authorized to do this action!')
 
+    user = CustomUser.objects.raw('SELECT * FROM rent_app_customuser where id = ' + str(user_id))[0]
+
     # Main logic of accepting the user
     with connection.cursor() as cursor:
         cursor.execute('DELETE FROM rent_app_requests WHERE house_id_id = %s', [house_id])
         cursor.execute('UPDATE rent_app_house SET vacant = 0, rented_id = %s where house_id = %s', (user_id, house_id))
-
+    subject = 'Rent request accepted!'
+    message = f'Hi {user.user_name}, The house http://127.0.0.1:8000/houses/{house_id} you wanted to rent is now accepted by the owner. Visit the house view page whenever you want to leave or you can contact the owner anytime\n\nThank you'
+    email_from = settings.EMAIL_HOST_USER
+    print(user.email)
+    recipient_list = [user.email, ]
+    send_mail( subject, message, email_from, recipient_list )
     return redirect('/houses/' + str(house_id))
 
 
