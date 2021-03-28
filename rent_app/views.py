@@ -158,6 +158,9 @@ def viewHouse(request, house_id):
     reviews = Review.objects.raw("SELECT * FROM rent_app_review where house_id_id = " + str(house_id))
 
     # Data obtained from the queries must be passed to the house_details.html template
+    
+    # print(house.owner_id.pk)
+    # Here we need to pass owner object. Using house.owner_id_id or house.owner_id.pk gives the id number and not the object
     context = {
         'house': house,
         'images': houseImages,
