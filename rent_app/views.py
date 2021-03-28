@@ -1,12 +1,15 @@
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect, HttpResponse, Http404
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User,auth
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User, auth
 from django.shortcuts import get_object_or_404
-from .models import CustomUser,CustomUserManager, House, HouseImages, Review
+from .models import CustomUser, CustomUserManager, House, HouseImages, Review, Requests
 from django.conf import settings
 from .forms import *
 from django.contrib import messages
 import datetime
+from django.db import connection
+
 
 def HomePage(request):
     
@@ -95,36 +98,34 @@ def logout(request):
     return redirect('/')
 
 
+@login_required(login_url='/login')
 def dashboard(request):
-    if request.user.is_authenticated:
+    # Here request.user.id gives the id of the user and not the object itself.
+    ownedHouses = House.objects.raw("SELECT * FROM rent_app_house where owner_id_id = " + str(request.user.id))
+    
+    ownedHouseThumbnails = []
 
-        # Here request.user.id gives the id of the user and not the object itself.
-        ownedHouses = House.objects.raw("SELECT * FROM rent_app_house where owner_id_id = " + str(request.user.id))
-        
-        ownedHouseThumbnails = []
+    # Fetch all images from house images
+    houseImages = HouseImages.objects.raw("SELECT * FROM rent_app_houseimages")
+    
+    # Just using house.house_id gives house object and not the real ID, so using pk attribute we get the ID
+    for house in ownedHouses:
+        for image in houseImages:
+            if image.house_id.pk == house.pk:
+                ownedHouseThumbnails.append([house.pk, image.image])
+                break
 
-        # Fetch all images from house images
-        houseImages = HouseImages.objects.raw("SELECT * FROM rent_app_houseimages")
-       
-        # Just using house.house_id gives house object and not the real ID, so using pk attribute we get the ID
-        for house in ownedHouses:
-            for image in houseImages:
-                if image.house_id.pk == house.pk:
-                    ownedHouseThumbnails.append([house.pk, image.image])
-                    break
+    # Fetch all reviews of the user
+    reviewsGiven = Review.objects.raw("SELECT * FROM rent_app_review where user_id_id = " + str(request.user.id))
+    # Data obtained from the queries must be passed to the dashboard.html template
+    context = {
+        'housesOwned': len(ownedHouses),
+        'reviewsGiven': len(reviewsGiven),
+        'ownedHouseThumbnails': ownedHouseThumbnails,
+        'ownedHouses': ownedHouses
+    }
+    return render(request, 'dashboard.html', context)
 
-        # Fetch all reviews of the user
-        reviewsGiven = Review.objects.raw("SELECT * FROM rent_app_review where user_id_id = " + str(request.user.id))
-        # Data obtained from the queries must be passed to the dashboard.html template
-        context = {
-            'housesOwned': len(ownedHouses),
-            'reviewsGiven': len(reviewsGiven),
-            'ownedHouseThumbnails': ownedHouseThumbnails,
-            'ownedHouses': ownedHouses
-        }
-        return render(request, 'dashboard.html', context)
-    else:
-        return redirect('/login')
 
 
 def update_profile(request):
@@ -146,6 +147,7 @@ def update_profile(request):
     return render(request, 'update_profile.html', context)
 
 
+@login_required(login_url='/login')
 def viewHouse(request, house_id):
 
     # There exists only a single house with this house id ie the first element of the queryset always.
@@ -161,11 +163,21 @@ def viewHouse(request, house_id):
     
     # print(house.owner_id.pk)
     # Here we need to pass owner object. Using house.owner_id_id or house.owner_id.pk gives the id number and not the object
+
+    rentRequests = None
+    print(request.user.id)
+    if request.user.id == house.owner_id.pk:
+        rentRequests = Requests.objects.raw('SELECT id, user_id_id FROM rent_app_requests where house_id_id = ' + str(house_id))
+        print(rentRequests)
+        for req in rentRequests:
+            print(req)
+
     context = {
         'house': house,
         'images': houseImages,
         'owner': house.owner_id,
         'reviews': reviews,
+        'requests': rentRequests
     }
     return render(request, 'house_details.html', context)
 
@@ -187,6 +199,7 @@ def addHouse(request):
                                     rent=request.POST['rent']
                                     )
             imgs = request.FILES.getlist('image',False)
+            print(imgs)
             for img in imgs:
                 if img:
                     imgx = HouseImages(image=img, house_id=new_house)
@@ -196,3 +209,52 @@ def addHouse(request):
         return render(request,'add_house.html')
     else:
         return redirect("/login")
+
+
+@login_required(login_url='/login')
+def sendRentRequest(request, house_id):
+    
+    house = House.objects.raw("SELECT * FROM rent_app_house where house_id = " + str(house_id))[0]
+
+    # print(house)
+    # print(house.owner_id.pk)
+    # print(request.user.id)
+
+    if house.owner_id.pk == request.user.id:
+        messages.error(request, 'You are the owner!')
+        return redirect('/houses/' + str(house_id))
+
+    rentRequest = Requests.objects.raw('SELECT * FROM rent_app_requests where house_id_id = ' + str(house_id) + ' and user_id_id = ' + str(request.user.id))
+
+    if len(rentRequest) != 0:
+        messages.success(request, 'Request already sent')
+        return redirect('/houses/' + str(house_id))
+    else:
+        Requests.objects.create(house_id_id=house_id, user_id_id=request.user.id)
+        messages.success(request, "Request sent successfully")
+        return redirect("/houses/" + str(house_id))
+
+    return HttpResponse('404')
+
+
+def acceptRequest(request, house_id, user_id):
+
+    rentRequest = Requests.objects.raw('SELECT * FROM rent_app_requests where house_id_id = ' + str(house_id) + ' and user_id_id = ' + str(user_id))
+
+    if len(rentRequest) == 0:
+        return HttpResponse('<h1>Page not found</h1>')
+
+    reqHouse = House.objects.raw('SELECT * FROM rent_app_house where house_id = ' + str(house_id))[0]
+    if reqHouse.owner_id.pk != request.user.id:
+        return HttpResponse('You are not authorized to do this action!')
+
+    # Main logic of accepting the user
+    with connection.cursor() as cursor:
+        cursor.execute('DELETE FROM rent_app_requests WHERE house_id_id = %s', [house_id])
+        cursor.execute('UPDATE rent_app_house SET vacant = 0, rented_id = %s where house_id = %s', (user_id, house_id))
+
+    return redirect('/houses/' + str(house_id))
+
+
+def editHouse(request, house_id):
+    return HttpResponse('edit house')

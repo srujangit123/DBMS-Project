@@ -11,6 +11,19 @@
   <link rel="stylesheet" href="css/styles.css?v=1.0">
 
 </head>
+    {% if owner.id != user.id%}
+        <a href = '/request/{{house.house_id}}'> Request this house </a>
+    {%endif%}
+    {% if user.is_authenticated and owner.id == user.id %}
+        <a href = '/houses/edit/{{house.house_id}}'> Edit </a>
+    {% endif %}
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li  {% if message.tags %} class=" {{ message.tags }} " {% endif %}> {{ message }} </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
     <h1> Rent: {{ house.rent}}</h1>
     <h1> City : {{ house.city}}</h1>
     <h1> State: {{ house.state}}</h1>
@@ -35,6 +48,16 @@
             <br>
         {% endfor %}
     </div>
+    {% if user.is_authenticated and owner.id == user.id %}
+    <div>
+        <h1>Requests:</h1>
+        {% for req in requests %}
+            <p>{{req.user_id.email}}: {{req.user_id.phoneno}} : {{req.user_id_id}}
+            <a href = '/requests/accept/{{house.house_id}}/{{req.user_id_id}}'>accept</a></p>
+        {% endfor %}
+    
+    </div>
+    {% endif %}
 </body>
 </html> -->
 
@@ -53,7 +76,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <div class="container">
-        <a class="navbar-brand" href="#">Rental Management</a>
+        <a class="navbar-brand" href="/">Rental Management</a>
         <button
           class="navbar-toggler"
           type="button"
@@ -74,13 +97,13 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">About</a>
+              <a class="nav-link" href="/about">About</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Services</a>
+              <a class="nav-link" href="/services">Services</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Contact</a>
+              <a class="nav-link" href="/contact">Contact</a>
             </li>
             {% if user.is_authenticated %}
             <a href="/dashboard"
@@ -112,7 +135,7 @@
       <div class="preview_text_seperator"></div>
       <div class="pos preview_text_property_name">2 bhk flat</div>
       <div class="pos preview_text_property_place">india</div>
-      <!-- <div class="pos preview_owner_bg"></div> -->
+      <div class="pos preview_owner_bg"></div> -->
       <!-- <div class="pos preview_text_property_owner">Owner</div> -->
       <!-- <div class="pos preview_text_property_owner_name">rashmit</div> -->
     </div>
