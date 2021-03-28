@@ -6,7 +6,7 @@ from .models import CustomUser,CustomUserManager, House, HouseImages, Review
 from django.conf import settings
 from .forms import *
 from django.contrib import messages
-
+import datetime
 
 def HomePage(request):
     
@@ -171,21 +171,28 @@ def viewHouse(request, house_id):
 
 
 def addHouse(request):
+    # check if user is logged in
+    if request.user.is_authenticated:
+        if request.method == 'POST':
 
-    if request.method == 'POST':
+            # fetch user object
+            user = request.user
 
-        # fetch user object
-        user = request.user
-
-        # Insert a new record in the house table
-        new_house = House.objects.create(owner_id=user,
-                                  city=request.POST['city'],
-                                  state=request.POST['state'],
-                                  address=request.POST['address'],
-                                  description=request.POST['description'],
-                                  rent=request.POST['rent']
-                                )
-
-        # redirect to house detail page
-        return redirect('/houses/' + str(new_house.house_id))
-    return render(request,'add_house.html')
+            # Insert a new record in the house table
+            new_house = House.objects.create(owner_id=user,
+                                    city=request.POST['city'],
+                                    state=request.POST['state'],
+                                    address=request.POST['address'],
+                                    description=request.POST['description'],
+                                    rent=request.POST['rent']
+                                    )
+            imgs = request.FILES.getlist('image',False)
+            for img in imgs:
+                if img:
+                    imgx = HouseImages(image=img, house_id=new_house)
+                    imgx.save()
+                    
+            return redirect('/houses/' + str(new_house.house_id))
+        return render(request,'add_house.html')
+    else:
+        return redirect("/login")
