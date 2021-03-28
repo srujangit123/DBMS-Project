@@ -12,13 +12,21 @@ import datetime
 from django.db import connection
 
 
+def emailSender(subject, message, mailID):
+    email_from = settings.EMAIL_HOST_USER
+    recipient_list = [mailID, ]
+    send_mail( subject, message, email_from, recipient_list )
+
+
 def HomePage(request):
     city = ''
+    
     try:
         # Todo -> filters
         city = request.GET['city']
     except:
         print('no city param')
+    
     # select all house images
     houseImages = HouseImages.objects.raw("SELECT * FROM rent_app_houseimages")
 
@@ -35,13 +43,12 @@ def HomePage(request):
                 houseThumbnails.append([house.pk, image.image])
                 break
 
-    for ob in houseThumbnails:
-        print(ob[0], ob[1])
 
     context = {
         'thumbnails' : houseThumbnails,
         'houses': houses
     }
+
     return render(request, 'home.html', context)
 
 
@@ -60,14 +67,13 @@ def contact(request):
 
 def signup(request):
     if request.method == 'POST':
-        print(request.POST)
         email = request.POST.get('email')
-        print(email,"email")
         password = request.POST.get('password')
         user_name=request.POST.get('username')
+
         try:
             CustomUser.objects.get(email=email)
-            print('user already exist')
+            print('user already exists')
             return redirect('/register')
         except CustomUser.DoesNotExist:
             user = CustomUser.objects.create_user(
@@ -75,15 +81,13 @@ def signup(request):
                 user_name=user_name,
                 password=password
             )
-            print(user)
             auth.login(request,user)
+            
             subject = 'Welcome to Rental Management'
             message = f'Hi {user.user_name}, Thank you for registering on our webiste. If you have any problem accessing it, please contact us.\n\nThank you'
-            email_from = settings.EMAIL_HOST_USER
-            recipient_list = [user.email, ]
-            send_mail( subject, message, email_from, recipient_list )
+            emailSender(subject, message, user.email)
+        
         return redirect('/')
-        print('sign1111')
     return render(request, 'register.html')
 
 
@@ -92,18 +96,14 @@ def login(request):
         email = request.POST.get('email') #Get email value from form
         password = request.POST.get('password') #Get password value from form
         user = authenticate(request, email=email, password=password)
-        # print(user)
         if user is not None:
             auth.login(request, user)
             subject = 'New sign in to our website'
             message = f'Hi {user.user_name}, Recently you logged in to Rental Webiste management website. If it is not you, please change your password.\nThank you'
-            email_from = settings.EMAIL_HOST_USER
-            recipient_list = [user.email, ]
-            send_mail( subject, message, email_from, recipient_list )
+            emailSender(subject, message, user.email)
             return redirect('/')
         else:
             # Invalid email or password. Handle as you wish
-            print('here1')
             return redirect('/')
 
     return render(request, 'login.html')
@@ -149,7 +149,6 @@ def update_profile(request):
         return redirect('/login')
 
     if request.method == 'POST':
-        print("post")
         form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
@@ -181,12 +180,8 @@ def viewHouse(request, house_id):
     # Here we need to pass owner object. Using house.owner_id_id or house.owner_id.pk gives the id number and not the object
 
     rentRequests = None
-    print(request.user.id)
     if request.user.id == house.owner_id.pk:
         rentRequests = Requests.objects.raw('SELECT id, user_id_id FROM rent_app_requests where house_id_id = ' + str(house_id))
-        print(rentRequests)
-        for req in rentRequests:
-            print(req)
 
     context = {
         'house': house,
@@ -215,7 +210,6 @@ def addHouse(request):
                                     rent=request.POST['rent']
                                     )
             imgs = request.FILES.getlist('image',False)
-            print(imgs)
             for img in imgs:
                 if img:
                     imgx = HouseImages(image=img, house_id=new_house)
@@ -231,10 +225,6 @@ def addHouse(request):
 def sendRentRequest(request, house_id):
     
     house = House.objects.raw("SELECT * FROM rent_app_house where house_id = " + str(house_id))[0]
-
-    # print(house)
-    # print(house.owner_id.pk)
-    # print(request.user.id)
 
     if house.owner_id.pk == request.user.id:
         messages.error(request, 'You are the owner!')
@@ -271,12 +261,12 @@ def acceptRequest(request, house_id, user_id):
     with connection.cursor() as cursor:
         cursor.execute('DELETE FROM rent_app_requests WHERE house_id_id = %s', [house_id])
         cursor.execute('UPDATE rent_app_house SET vacant = 0, rented_id = %s where house_id = %s', (user_id, house_id))
+    
+    
     subject = 'Rent request accepted!'
     message = f'Hi {user.user_name}, The house http://127.0.0.1:8000/houses/{house_id} you wanted to rent is now accepted by the owner. Visit the house view page whenever you want to leave or you can contact the owner anytime\n\nThank you'
-    email_from = settings.EMAIL_HOST_USER
-    print(user.email)
-    recipient_list = [user.email, ]
-    send_mail( subject, message, email_from, recipient_list )
+    emailSender(subject, message, user.email)
+    
     return redirect('/houses/' + str(house_id))
 
 
