@@ -6,7 +6,7 @@ from .models import CustomUser,CustomUserManager, House, HouseImages, Review
 from django.conf import settings
 from .forms import *
 from django.contrib import messages
-
+import datetime
 
 def HomePage(request):
     
@@ -186,9 +186,13 @@ def addHouse(request):
                                     description=request.POST['description'],
                                     rent=request.POST['rent']
                                     )
-
-            # redirect to house detail page
+            imgs = request.FILES.getlist('image',False)
+            for img in imgs:
+                if img:
+                    imgx = HouseImages(image=img, house_id=new_house)
+                    imgx.save()
+                    
             return redirect('/houses/' + str(new_house.house_id))
         return render(request,'add_house.html')
     else:
-        return render("/login")
+        return redirect("/login")
