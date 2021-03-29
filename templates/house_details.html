@@ -1,67 +1,3 @@
-
-<!-- <!doctype html>
-
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-
-  <title>The HTML5 Herald</title>
-  <meta name="description" content="The HTML5 Herald">
-  <meta name="author" content="SitePoint">
-
-  <link rel="stylesheet" href="css/styles.css?v=1.0">
-
-</head>
-    {% if owner.id != user.id%}
-        <a href = '/request/{{house.house_id}}'> Request this house </a>
-    {%endif%}
-    {% if user.is_authenticated and owner.id == user.id %}
-        <a href = '/houses/edit/{{house.house_id}}'> Edit </a>
-    {% endif %}
-    {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-        <li  {% if message.tags %} class=" {{ message.tags }} " {% endif %}> {{ message }} </li>
-        {% endfor %}
-    </ul>
-    {% endif %}
-    <h1> Rent: {{ house.rent}}</h1>
-    <h1> City : {{ house.city}}</h1>
-    <h1> State: {{ house.state}}</h1>
-    <h1> des: {{ house.description}}</h1>
-    <h1> Address: {{ house.address}}</h1>
-    <h1> Owner : {{ owner.email}}</h1>
-    <h1> owner upi_id: {{ owner.upi_id}}</h1>
-    <h1> owner phone : {{ owner.phoneno}}</h1>
-    <h1> owner address: {{ owner.address}}</h1>
-    {% for image in images %}
-        <img src = /media/{{image.image}}/>
-    {% endfor %}
-    <br>
-    <br>
-    <br>
-    <h1> Reviews</h1>
-    <div> 
-        {% for review in reviews %}
-            <h4> profile image of user</h4>
-            <img src = "/media/{{review.user_id.profile_image}}">
-            {{ review.user_id.user_name }} : {{ review.rating }} ->  {{ review.description }}
-            <br>
-        {% endfor %}
-    </div>
-    {% if user.is_authenticated and owner.id == user.id %}
-    <div>
-        <h1>Requests:</h1>
-        {% for req in requests %}
-            <p>{{req.user_id.email}}: {{req.user_id.phoneno}} : {{req.user_id_id}}
-            <a href = '/requests/accept/{{house.house_id}}/{{req.user_id_id}}'>accept</a></p>
-        {% endfor %}
-    
-    </div>
-    {% endif %}
-</body>
-</html> -->
-
 <!DOCTYPE html>
 {% load static %}
 <html>
@@ -164,15 +100,29 @@
         <div class="pos image_text" style="top: 545px">{{owner.address}}</div>
         <div class="pos image_hl" style="top: 610px"></div>
       </div>
-      
       {% if user.is_authenticated and owner.id == user.id %}
         <h3 style="text-align:center; margin-top: 800px">Requests for this house: </h3>
-        <ol class="req" >
-          {% for req in requests %}
-          <p style="text-align:center">{{req.user_id.email}}: {{req.user_id.phoneno}} : {{req.user_id_id}}
-            <a style href = '/requests/accept/{{house.house_id}}/{{req.user_id_id}}'>accept</a></p>
-          {% endfor %}
-        </ol>
+        
+          <table class="pos styled-table">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Phone No.</th>
+                    <th>user name</th>
+                    <th>Accept</th>
+                </tr>
+            </thead>
+            <tbody>
+              {% for req in requests %}
+                <tr>
+                    <td>{{req.user_id.email}}</td>
+                    <td>{{req.user_id.phoneno}}</td>
+                    <td>{{req.user_id.user_name}}</td>
+                    <td> <a style href = '/requests/accept/{{house.house_id}}/{{req.user_id_id}}'>accept</a></p></td>
+                    
+                </tr>
+              {% endfor %}
+            </tbody>
       {% endif %}
       <div class="pos"></div>
     </div>
