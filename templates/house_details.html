@@ -1,3 +1,4 @@
+
 <!-- <!doctype html>
 
 <html lang="en">
@@ -65,12 +66,8 @@
 {% load static %}
 <html>
   <head>
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet"/>
     <link href="{% static 'css/house_details.css' %}" rel="stylesheet" />
-    <link
-      href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}"
-      rel="stylesheet"
-    />
-    <link href="{% static 'css/shop-homepage.css' %}" rel="stylesheet" />
   </head>
   <body class="body">
     <!-- Navigation -->
@@ -130,48 +127,42 @@
         </div>
       </div>
     </nav>
-    <!-- <div class="pos preview_bg">
-      <div class="preview_text_price">rent</div>
-      <div class="preview_text_seperator"></div>
-      <div class="pos preview_text_property_name">2 bhk flat</div>
-      <div class="pos preview_text_property_place">india</div>
-      <div class="pos preview_owner_bg"></div> -->
-      <!-- <div class="pos preview_text_property_owner">Owner</div> -->
-      <!-- <div class="pos preview_text_property_owner_name">rashmit</div> -->
+
     </div>
-    
-    <div class="pos image_bg">
-      <img src="download.png" class="pos image_image" />
-      <div class="pos image_contact">contact now</div>
-      <div class="pos image_rentnow">rent now</div>
-      <div class="pos image_vl"></div>
-      <div class="pos image_text_desc_name">Description</div>
-      <div class="pos image_text_desc">{{house.description}}</div>
-      <div class="pos image_hl"></div>
-      <div class="pos image_text_name" style="top: 215px">Rent</div>
-      <div class="pos image_text" style="top: 215px">{{house.rent}}</div>
-      <div class="pos image_hl" style="top: 250px"></div>
-      <div class="pos image_text_name">City</div>
-      <div class="pos image_text">{{house.city}}</div>
-      <div class="pos image_hl" style="top: 300px"></div>
-      <div class="pos image_text_name" style="top: 315px">Address</div>
-      <div class="pos image_text" style="top: 315px">{{house.address}}</div>
-      <div class="pos image_hl" style="top: 380px"></div>
-      <div class="pos image_text_name" style="top: 395px">Owner's Email ID</div>
-      <div class="pos image_text" style="top: 395px">{{owner.email}}</div>
-      <div class="pos image_hl" style="top: 430px"></div>
-      <div class="pos image_text_name" style="top: 445px">Owner's UPI-ID</div>
-      <div class="pos image_text" style="top: 445px">{{owner.upi_id}}</div>
-      <div class="pos image_hl" style="top: 480px"></div>
-      <div class="pos image_text_name" style="top: 495px">
-        Owner's Phone Number
+    <div class="containerx">
+      <div class="pos image_bg">
+        {% for img in images %}
+          <img src="/media/{{img.image}}" class="pos image_image" />
+        {% endfor %}
+        <button type="button" class= "btn btn-lg btn-info pos image_contact button">Contact</button>
+        <button type="button" class= "btn btn-lg btn-success pos image_rentnow button">Rent</button>
+        <div class="pos image_vl"></div>
+        <div class="pos image_text_desc_name">Description</div>
+        <div class="pos image_text_desc">{{house.description}}</div>
+        <div class="pos image_hl"></div>
+        <div class="pos image_text_name" style="top: 215px">Rent</div>
+        <div class="pos image_text" style="top: 215px">{{house.rent}}</div>
+        <div class="pos image_hl" style="top: 250px"></div>
+        <div class="pos image_text_name">City</div>
+        <div class="pos image_text">{{house.city}}</div>
+        <div class="pos image_hl" style="top: 300px"></div>
+        <div class="pos image_text_name" style="top: 315px">Address</div>
+        <div class="pos image_text" style="top: 315px">{{house.address}}</div>
+        <div class="pos image_hl" style="top: 380px"></div>
+        <div class="pos image_text_name" style="top: 395px">Owner's Email ID</div>
+        <div class="pos image_text" style="top: 395px">{{owner.email}}</div>
+        <div class="pos image_hl" style="top: 430px"></div>
+        <div class="pos image_text_name" style="top: 445px">Owner's UPI-ID</div>
+        <div class="pos image_text" style="top: 445px">{{owner.upi_id}}</div>
+        <div class="pos image_hl" style="top: 480px"></div>
+        <div class="pos image_text_name" style="top: 495px">Owner's Phone Number</div>
+        <div class="pos image_text" style="top: 495px">{{owner.phoneno}}</div>
+        <div class="pos image_hl" style="top: 530px"></div>
+        <div class="pos image_text_name" style="top: 545px">Owner's Address</div>
+        <div class="pos image_text" style="top: 545px">{{owner.address}}</div>
+        <div class="pos image_hl" style="top: 610px"></div>
       </div>
-      <div class="pos image_text" style="top: 495px">{{owner.phoneno}}</div>
-      <div class="pos image_hl" style="top: 530px"></div>
-      <div class="pos image_text_name" style="top: 545px">Owner's Address</div>
-      <div class="pos image_text" style="top: 545px">India</div>
-      <div class="pos image_hl" style="top: 610px"></div>
+      <div class="pos"></div>
     </div>
-    <div class="pos"></div>
   </body>
 </html>
