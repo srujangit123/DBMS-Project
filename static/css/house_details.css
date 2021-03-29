@@ -5,8 +5,6 @@
   left: 0;
   right: 0;
   margin: auto;
-  /* display:flex; */
-  /* align-items:center; */
   border: 1px solid lightblue;
 }
 
@@ -62,32 +60,19 @@
 
 .image_contact {
   position: relative;
-  background: #ff0000;
   text-align: center;
-  width: 100px;
-  height: 40px;
-  color: #ffffff;
   font-size: 15px;
   left: 160px;
   bottom: 20px;
-  font-size: 18px;
   text-align: center;
-  line-height: 36px;
 }
 
 .image_rentnow {
   position: relative;
-  background: #ff0000;
   text-align: center;
-  width: 100px;
-  height: 40px;
-  color: #ffffff;
   font-size: 15px;
   left: 270px;
   bottom: 20px;
-  font-size: 18px;
-  text-align: center;
-  line-height: 35px;
 }
 
 .image_bg {
@@ -99,6 +84,7 @@
   top: 110px;
   margin: auto;
 }
+
 .image_image {
   position: relative;
   height: 270px;
@@ -130,7 +116,8 @@
 
 .image_text_desc {
   position: relative;
-  left: 420;
+  left: 420px;
+  right:auto;
   top: 70px;
   font-size: 21px;
 }
@@ -155,4 +142,9 @@
 
 .pos {
   position: absolute;
+}
+
+.containerx {
+  border-radius: 1mm;
+  border-color: rgb(172, 15, 15);
 }
