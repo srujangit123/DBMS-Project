@@ -134,8 +134,10 @@
         {% for img in images %}
           <img src="/media/{{img.image}}" class="pos image_image" />
         {% endfor %}
-        <button type="button" class= "btn btn-lg btn-info pos image_contact button">Contact</button>
-        <button type="button" class= "btn btn-lg btn-success pos image_rentnow button">Rent</button>
+        {%if owner.email != user.email %}
+          <a href="#" role="button" class= "btn btn-lg btn-info pos image_contact button">Contact</a>
+          <a href = "/request/{{house.house_id}}"button type="button" class= "btn btn-lg btn-success pos image_rentnow button">Rent</a>
+        {% endif %}
         <div class="pos image_vl"></div>
         <div class="pos image_text_desc_name">Description</div>
         <div class="pos image_text_desc">{{house.description}}</div>
@@ -162,6 +164,16 @@
         <div class="pos image_text" style="top: 545px">{{owner.address}}</div>
         <div class="pos image_hl" style="top: 610px"></div>
       </div>
+      
+      {% if user.is_authenticated and owner.id == user.id %}
+        <h3 style="text-align:center; margin-top: 800px">Requests for this house: </h3>
+        <ol class="req" >
+          {% for req in requests %}
+          <p style="text-align:center">{{req.user_id.email}}: {{req.user_id.phoneno}} : {{req.user_id_id}}
+            <a style href = '/requests/accept/{{house.house_id}}/{{req.user_id_id}}'>accept</a></p>
+          {% endfor %}
+        </ol>
+      {% endif %}
       <div class="pos"></div>
     </div>
   </body>
