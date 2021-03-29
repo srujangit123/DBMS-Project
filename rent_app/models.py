@@ -74,7 +74,8 @@ class House(models.Model):
     rent            = models.IntegerField()
     owner_id        = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     description     = models.TextField(null=True)
-    vacant          = models.BooleanField
+    vacant          = models.BooleanField(default=True)
+    rented_id       = models.IntegerField(default=-1)
 
     def __str__(self):
         return self.address
@@ -97,3 +98,8 @@ class Review(models.Model):
         unique_together = (
             ('user_id', 'house_id'),
         )
+
+
+class Requests(models.Model):
+    user_id         = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    house_id        = models.ForeignKey(House, on_delete=models.CASCADE)

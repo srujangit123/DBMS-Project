@@ -1,27 +1,12 @@
-"""website URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/3.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
 from rent_app.views import *
 from django.conf import settings 
 from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', HomePage),
+    re_path('^$', HomePage),
     path('about/', about),
     path('services/', services),
     path('contact/', contact),
@@ -30,8 +15,12 @@ urlpatterns = [
     path('logout', logout, name='logout'),
     path('dashboard',dashboard,name='dashboard'),
     path('users/edit', update_profile, name='update_profile'),
+    path('houses/add', addHouse, name='addhouse'),
     path('houses/<int:house_id>', viewHouse, name='view_house'),
-    path('houses/add_house', addHouse, name='add_house')
+    path('houses/add_house', addHouse, name='add_house'),
+    path('request/<int:house_id>', sendRentRequest, name='send_request'),
+    path('houses/edit/<int:house_id>', editHouse, name='edit_house'),
+    path('requests/accept/<int:house_id>/<int:user_id>',acceptRequest, name='accept_request'),
 ]
 
 if settings.DEBUG: 

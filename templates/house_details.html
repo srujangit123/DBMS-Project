@@ -1,3 +1,67 @@
+
+<!-- <!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>The HTML5 Herald</title>
+  <meta name="description" content="The HTML5 Herald">
+  <meta name="author" content="SitePoint">
+
+  <link rel="stylesheet" href="css/styles.css?v=1.0">
+
+</head>
+    {% if owner.id != user.id%}
+        <a href = '/request/{{house.house_id}}'> Request this house </a>
+    {%endif%}
+    {% if user.is_authenticated and owner.id == user.id %}
+        <a href = '/houses/edit/{{house.house_id}}'> Edit </a>
+    {% endif %}
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li  {% if message.tags %} class=" {{ message.tags }} " {% endif %}> {{ message }} </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <h1> Rent: {{ house.rent}}</h1>
+    <h1> City : {{ house.city}}</h1>
+    <h1> State: {{ house.state}}</h1>
+    <h1> des: {{ house.description}}</h1>
+    <h1> Address: {{ house.address}}</h1>
+    <h1> Owner : {{ owner.email}}</h1>
+    <h1> owner upi_id: {{ owner.upi_id}}</h1>
+    <h1> owner phone : {{ owner.phoneno}}</h1>
+    <h1> owner address: {{ owner.address}}</h1>
+    {% for image in images %}
+        <img src = /media/{{image.image}}/>
+    {% endfor %}
+    <br>
+    <br>
+    <br>
+    <h1> Reviews</h1>
+    <div> 
+        {% for review in reviews %}
+            <h4> profile image of user</h4>
+            <img src = "/media/{{review.user_id.profile_image}}">
+            {{ review.user_id.user_name }} : {{ review.rating }} ->  {{ review.description }}
+            <br>
+        {% endfor %}
+    </div>
+    {% if user.is_authenticated and owner.id == user.id %}
+    <div>
+        <h1>Requests:</h1>
+        {% for req in requests %}
+            <p>{{req.user_id.email}}: {{req.user_id.phoneno}} : {{req.user_id_id}}
+            <a href = '/requests/accept/{{house.house_id}}/{{req.user_id_id}}'>accept</a></p>
+        {% endfor %}
+    
+    </div>
+    {% endif %}
+</body>
+</html> -->
+
 <!DOCTYPE html>
 {% load static %}
 <html>
@@ -9,7 +73,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <div class="container">
-        <a class="navbar-brand" href="#">Rental Management</a>
+        <a class="navbar-brand" href="/">Rental Management</a>
         <button
           class="navbar-toggler"
           type="button"
@@ -30,13 +94,13 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">About</a>
+              <a class="nav-link" href="/about">About</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Services</a>
+              <a class="nav-link" href="/services">Services</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Contact</a>
+              <a class="nav-link" href="/contact">Contact</a>
             </li>
             {% if user.is_authenticated %}
             <a href="/dashboard"
@@ -63,6 +127,7 @@
         </div>
       </div>
     </nav>
+
     </div>
     <div class="containerx">
       <div class="pos image_bg">
