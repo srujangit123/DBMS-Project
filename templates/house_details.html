@@ -67,6 +67,7 @@
     </div>
     <div class="containerx">
       <div class="pos image_bg">
+        
         {% for img in images %}
           <img src="/media/{{img.image}}" class="pos image_image" />
         {% endfor %}
@@ -75,7 +76,7 @@
           <a href = "/request/{{house.house_id}}"button type="button" class= "btn btn-lg btn-success pos image_rentnow button">Rent</a>
         {% endif %}
         <div class="pos image_vl"></div>
-        <div class="pos image_text_desc_name">Description</div>
+        <div class="pos image_text_desc_name" >Description</div>
         <div class="pos image_text_desc">{{house.description}}</div>
         <div class="pos image_hl"></div>
         <div class="pos image_text_name" style="top: 215px">Rent</div>
