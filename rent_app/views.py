@@ -31,7 +31,7 @@ def HomePage(request):
     houseImages = HouseImages.objects.raw("SELECT * FROM rent_app_houseimages")
 
     # select all houses in the house table;
-    houses = House.objects.raw("SELECT * FROM rent_app_house")
+    houses = House.objects.raw("SELECT * FROM rent_app_house where vacant = 1")
 
     # Contains [house_id, thumbnail_image] array of arrays
     houseThumbnails = []
@@ -214,7 +214,7 @@ def addHouse(request):
                 if img:
                     imgx = HouseImages(image=img, house_id=new_house)
                     imgx.save()
-                    
+
             return redirect('/houses/' + str(new_house.house_id))
         return render(request,'add_house.html')
     else:

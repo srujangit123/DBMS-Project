@@ -63,7 +63,14 @@
         </div>
       </div>
     </nav>
-
+    
+    {% if messages %}
+    <ul class="messages pos">
+      {% for message in messages %}
+        <li class="pos mes {{ message.tags }} alert alert-success">{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
     </div>
     <div class="containerx">
       <div class="pos image_bg">
