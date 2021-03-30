@@ -80,7 +80,11 @@
         {% endfor %}
         {%if owner.email != user.email %}
           <a href="#" role="button" class= "btn btn-lg btn-info pos image_contact button">Contact</a>
-          <a href = "/request/{{house.house_id}}"button type="button" class= "btn btn-lg btn-success pos image_rentnow button">Rent</a>
+          {% if canLeave %}
+            <a href = "/leave/{{house.house_id}}"button type="button" class= "btn btn-lg btn-danger pos image_rentnow button">Leave</a>
+          {% else %}
+            <a href = "/request/{{house.house_id}}"button type="button" class= "btn btn-lg btn-success pos image_rentnow button">Rent</a>
+          {% endif %}
         {% endif %}
         <div class="pos image_vl"></div>
         <div class="pos image_text_desc_name" >Description</div>

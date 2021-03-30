@@ -20,6 +20,7 @@ urlpatterns = [
     path('houses/add_house', addHouse, name='add_house'),
     path('request/<int:house_id>', sendRentRequest, name='send_request'),
     path('houses/edit/<int:house_id>', editHouse, name='edit_house'),
+    path('leave/<int:house_id>', leaveHouse, name='leave_house'),
     path('requests/accept/<int:house_id>/<int:user_id>',acceptRequest, name='accept_request'),
 ]
 

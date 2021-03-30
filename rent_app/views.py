@@ -167,11 +167,8 @@ def viewHouse(request, house_id):
 
     # There exists only a single house with this house id ie the first element of the queryset always.
     house = House.objects.raw("SELECT * FROM rent_app_house where house_id = " + str(house_id))[0]
-    print(request.user.id)
-    print(house.owner_id_id)
-    print(house.rented_id)
     if house.vacant == 0:
-        if request.user.id == house.owner_id_id:
+        if request.user.id == house.owner_id.pk:
             messages.error(request, "This house is already rented by a user")
         else:
             if house.rented_id != request.user.id:
@@ -195,11 +192,17 @@ def viewHouse(request, house_id):
     if request.user.id == house.owner_id.pk:
         rentRequests = Requests.objects.raw('SELECT id, user_id_id FROM rent_app_requests where house_id_id = ' + str(house_id))
 
+    isUserAuthorizedToLeave = False
+
+    if house.vacant == 0 and house.rented_id == request.user.id:
+        isUserAuthorizedToLeave = True
+
     context = {
         'house': house,
         'images': houseImages,
         'owner': house.owner_id,
         'reviews': reviews,
+        'canLeave': isUserAuthorizedToLeave,
         'requests': rentRequests
     }
     return render(request, 'house_details.html', context)
@@ -279,6 +282,23 @@ def acceptRequest(request, house_id, user_id):
     message = f'Hi {user.user_name}, The house http://127.0.0.1:8000/houses/{house_id} you wanted to rent is now accepted by the owner. Visit the house view page whenever you want to leave or you can contact the owner anytime\n\nThank you'
     emailSender(subject, message, user.email)
     
+    return redirect('/houses/' + str(house_id))
+
+
+def leaveHouse(request, house_id):
+    house = House.objects.raw("SELECT * FROM rent_app_house where house_id = " + str(house_id))[0]
+    
+    if house.vacant == 1:
+        return HttpResponse("The requested page doesn't exist")
+
+    if house.owner_id.pk == request.user.id:
+        return HttpResponse('Contact the admin if you want to remove the user from your house')
+
+    if house.rented_id != request.user.id:
+        return HttpResponse("The requested page doesn't exist")
+
+    with connection.cursor() as cursor:
+        cursor.execute('UPDATE rent_app_house SET vacant = 1, rented_id = -1 where house_id = %s', [house_id])
     return redirect('/houses/' + str(house_id))
 
 
