@@ -41,13 +41,13 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">About</a>
+            <a class="nav-link" href="/about">About</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Services</a>
+            <a class="nav-link" href="/services">Services</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Contact</a>
+            <a class="nav-link" href="/contact">Contact</a>
           </li>
           {% if user.is_authenticated %}
           <li class="nav-item nav-link">{{user.user_name}}</li>
@@ -161,8 +161,11 @@
             <p class="font-italic mb-0">XXXX</p>
           </div>
         </div>
-        <a href="/houses/add_house" class="button"><span>Add new
-            house</span></a>
+        <!-- <a href="/houses/add_house" class="button"><span>Add new
+            house</span></a> -->
+        <div class="col-xs-12">
+          <a href="/houses/add_house" class="btn-lrg submit-btn">Add New House</a>
+        </div>
         <div class="py-4 px-4">
           <div class="d-flex align-items-center justify-content-between mb-3">
             <h5 class="mb-0">My Houses</h5>
