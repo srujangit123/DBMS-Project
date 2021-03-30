@@ -167,6 +167,18 @@ def viewHouse(request, house_id):
 
     # There exists only a single house with this house id ie the first element of the queryset always.
     house = House.objects.raw("SELECT * FROM rent_app_house where house_id = " + str(house_id))[0]
+    print(request.user.id)
+    print(house.owner_id_id)
+    print(house.rented_id)
+    if house.vacant == 0:
+        if request.user.id == house.owner_id_id:
+            messages.error(request, "This house is already rented by a user")
+        else:
+            if house.rented_id != request.user.id:
+                return HttpResponse("This page doesn't exist")
+            else:
+                messages.success(request, "You are currently renting this house")
+
 
     # Fetch all images for the house with given house id
     houseImages = HouseImages.objects.raw("SELECT * FROM rent_app_houseimages where house_id_id = " + str(house_id))
