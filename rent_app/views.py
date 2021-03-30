@@ -17,21 +17,46 @@ def emailSender(subject, message, mailID):
     recipient_list = [mailID, ]
     send_mail( subject, message, email_from, recipient_list )
 
-
 def HomePage(request):
     city = ''
+    price = 0
+    # city = request.GET['city']
+    # print(city)
     
     try:
         # Todo -> filters
         city = request.GET['city']
+        price = request.GET['price']
+        houses = House.objects.raw("SELECT * FROM rent_app_house where vacant = 1")
+        query = "SELECT * FROM rent_app_house where vacant = 1"
+
+        # Price filter
+        if price:
+            query += " and rent <= " + str(price)
+
+        # city filter
+        if city:
+            # check for city in uppercase form and lowercase form also
+            citylower = city.lower()
+            cityupper = city.upper()
+            query += " and city = " + f"'{city}'" + " or city = " + f"'{citylower}'" + " or city = " + f"'{cityupper}'"
+        print(query)
+        houses = House.objects.raw(query)
+
+        if not len(houses):
+            messages.success(request, 'No houses  found')
+            houses = House.objects.raw("SELECT * FROM rent_app_house where vacant = 1")
+            # return render(request,'home.html')
     except:
         print('no city param')
+        # select all houses in the house table;
+        houses = House.objects.raw("SELECT * FROM rent_app_house where vacant = 1")
     
     # select all house images
     houseImages = HouseImages.objects.raw("SELECT * FROM rent_app_houseimages")
 
-    # select all houses in the house table;
-    houses = House.objects.raw("SELECT * FROM rent_app_house where vacant = 1")
+    # # select all houses in the house table;
+    # houses = House.objects.raw("SELECT * FROM rent_app_house where vacant = 1")
 
     # Contains [house_id, thumbnail_image] array of arrays
     houseThumbnails = []
@@ -89,6 +114,7 @@ def signup(request):
         
         return redirect('/')
     return render(request, 'register.html')
+
 
 
 def login(request):
