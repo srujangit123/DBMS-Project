@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rent_app'
+    'rent_app',
+    'users'
 ]
 
 MIDDLEWARE = [
@@ -139,7 +140,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 MEDIA_URL = '/media/'
 
-AUTH_USER_MODEL = 'rent_app.CustomUser'
+AUTH_USER_MODEL = 'users.CustomUser'
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

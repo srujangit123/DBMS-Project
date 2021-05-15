@@ -1,20 +1,16 @@
 from django.contrib import admin
-from django.urls import path, re_path
+from django.urls import path, re_path, include
 from rent_app.views import *
 from django.conf import settings 
 from django.conf.urls.static import static
 
 urlpatterns = [
+    path('users/', include('users.urls')),
     path('admin/', admin.site.urls),
     re_path('^$', HomePage),
     path('about/', about),
     path('services/', services),
     path('contact/', contact),
-    path('login/', login, name='login'),
-    path('register/', signup, name='register'),
-    path('logout', logout, name='logout'),
-    path('dashboard',dashboard,name='dashboard'),
-    path('users/edit', update_profile, name='update_profile'),
     path('houses/add', addHouse, name='addhouse'),
     path('houses/<int:house_id>', viewHouse, name='view_house'),
     path('houses/add_house', addHouse, name='add_house'),

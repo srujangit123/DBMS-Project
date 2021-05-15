@@ -39,7 +39,7 @@
               <a class="nav-link" href="/contact">Contact</a>
             </li>
             {% if user.is_authenticated %}
-            <a href="/dashboard"
+            <a href="users/dashboard"
               ><li class="nav-item nav-link">{{user.user_name}}</li></a
             >
             <li class="nav-item">
@@ -81,9 +81,15 @@
         {%if owner.email != user.email %}
           <a href="#" role="button" class= "btn btn-lg btn-info pos image_contact button">Contact</a>
           {% if canLeave %}
-            <a href = "/leave/{{house.house_id}}"button type="button" class= "btn btn-lg btn-danger pos image_rentnow button">Leave</a>
+            <form method="post" action="/leave/{{house.house_id}}">
+            {% csrf_token %}
+            <input type="submit" value="Leave" class="btn btn-lg btn-danger pos image_rentnow button">
+            </form>
           {% else %}
-            <a href = "/request/{{house.house_id}}"button type="button" class= "btn btn-lg btn-success pos image_rentnow button">Rent</a>
+            <form method="post" action="/request/{{house.house_id}}">
+            {% csrf_token %}
+            <input type="submit" value="Rent" class="btn btn-lg btn-success pos image_rentnow button">
+            </form>
           {% endif %}
         {% endif %}
         <div class="pos image_vl"></div>
@@ -130,7 +136,13 @@
                     <td>{{req.user_id.email}}</td>
                     <td>{{req.user_id.phoneno}}</td>
                     <td>{{req.user_id.user_name}}</td>
-                    <td> <a style href = '/requests/accept/{{house.house_id}}/{{req.user_id_id}}'>accept</a></p></td>
+                    <td> 
+                    <form method="post" action="/requests/accept/{{house.house_id}}/{{req.user_id_id}}">
+                    {% csrf_token %}
+                    <input type="submit" value="Accept" class="btn-success button">
+                    {% comment %} <a style href = '/requests/accept/{{house.house_id}}/{{req.user_id_id}}'>accept</a></p> {% endcomment %}
+                    
+                    </td>
                     
                 </tr>
               {% endfor %}

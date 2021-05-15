@@ -47,7 +47,7 @@
             <a class="nav-link" href="/contact">Contact</a>
           </li>
           {% if user.is_authenticated %}
-          <a href='/dashboard'><li class="nav-item nav-link">{{user.user_name}}</li></a>
+          <a href='users/dashboard'><li class="nav-item nav-link">{{user.user_name}}</li></a>
           <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout<i class="fas fa-user-plus"></i></a></li>
           {% else %}
           <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Sign Up <i class="fas fa-user-plus"></i></a></li>
